@@ -69,6 +69,7 @@ export default function App() {
 	return (
 		<div>
 			<Search panTo={panTo} />
+			<Locate panTo={panTo} />
 			<GoogleMap
 				mapContainerStyle={mapContainerStyle}
 				zoom={12}
@@ -102,6 +103,28 @@ export default function App() {
 				) : null}
 			</GoogleMap>
 		</div>
+	)
+}
+
+export const Locate = ({ panTo }) => {
+	return (
+		<button
+			className='locate'
+			onClick={() => {
+				navigator.geolocation.getCurrentPosition(
+					position => {
+						panTo({
+							lat: position.coords.latitude,
+							lng: position.coords.longitude
+						})
+					},
+					() => null,
+					options
+				)
+			}}
+		>
+			<img src='compass.svg' alt='compass' />
+		</button>
 	)
 }
 
