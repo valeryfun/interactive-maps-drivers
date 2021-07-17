@@ -1,5 +1,5 @@
-# interactive-maps-drivers
-An interactive map to display the number of drivers
+## interactive-maps-drivers
+An interactive map to display the number of drivers. Map is generated using the Google Maps API. 
 
 ### to run the frontend
 `npm run client`
@@ -9,3 +9,4 @@ An interactive map to display the number of drivers
 
 ### to run concurrently
 `npm run dev`
+
