@@ -1,0 +1,29 @@
+{
+  "name": "interactive-maps-drivers",
+  "version": "1.0.0",
+  "description": "interactive map",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valeryfun/interactive-maps-drivers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valeryfun/interactive-maps-drivers/issues"
+  },
+  "homepage": "https://github.com/valeryfun/interactive-maps-drivers#readme"
+}

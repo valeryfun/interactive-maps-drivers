@@ -1,5 +1,5 @@
 import './App.css'
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import {
 	GoogleMap,
 	useLoadScript,
@@ -45,6 +45,9 @@ export default function App() {
 
 	const [markers, setMarkers] = useState([])
 	const [selected, setSelected] = useState(null)
+	const [isLoading, setIsLoading] = useState(false)
+	const [drivers, setDrivers] = useState([])
+	const [error, setError] = useState(null)
 
 	const onMapClick = useCallback(e => {
 		setMarkers(current => [
@@ -61,6 +64,57 @@ export default function App() {
 	const panTo = useCallback(({ lat, lng }) => {
 		mapRef.current.panTo({ lat, lng })
 		mapRef.current.setZoom(15)
+	}, [])
+
+	// useEffect(() => {
+	// 	var xhr = new XMLHttpRequest()
+	// 	xhr.addEventListener('readtstatechange', () => {
+	// 		if (xhr.readyState === 4) {
+	// 			if (xhr.status === 200) {
+	// 				var response = xhr.responseText,
+	// 					driver = JSON.parse(response)
+	// 				setIsLoaded(true)
+	// 				setDriver(driver)
+	// 				console.log(driver)
+	// 			} else {
+	// 				setIsLoaded(true)
+	// 				setError(true)
+	// 			}
+	// 		}
+	// 	})
+	// 	xhr.open('GET', 'https://qa-interview-test.splytech.dev/api/drivers/', true)
+	// 	xhr.send()
+	// }, [])
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					'http://qa-interview-test.splytech.dev/api/drivers/',
+					{
+						mode: 'no-cors',
+						headers: {
+							Accept: 'application/json',
+							'Content-Type': 'application/json'
+						}
+					}
+				)
+				const data = await response.json()
+				console.log(data)
+				// .then(response => response.json())
+				// .then(data => {
+				// 	setIsLoading(true)
+				// 	setDrivers(data)
+				// 	console.log(data)
+				// })
+			} catch (error) {
+				setIsLoading(true)
+				setError(error)
+				console.log(error.message)
+			}
+		}
+		fetchData()
+		console.log(fetchData())
 	}, [])
 
 	if (loadError) return 'Error loading maps'
@@ -96,7 +150,7 @@ export default function App() {
 						}}
 					>
 						<div>
-							<h2>Number of Taxis: </h2>
+							<h2>Number of Taxis:</h2>
 							<p>{formatRelative(selected.time, new Date())}</p>
 						</div>
 					</InfoWindow>
