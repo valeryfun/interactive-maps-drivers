@@ -1,5 +1,12 @@
+/* eslint-disable no-lone-blocks */
 import './App.css'
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import React, {
+	useState,
+	useCallback,
+	useRef,
+	useEffect,
+	useSelector
+} from 'react'
 import {
 	GoogleMap,
 	useLoadScript,
@@ -19,6 +26,8 @@ import {
 	ComboboxOption
 } from '@reach/combobox'
 import '@reach/combobox/styles.css'
+import InputRange from 'react-input-range'
+import 'react-input-range/lib/css/index.css'
 import mapStyles from './mapStyles'
 
 const libraries = ['places']
@@ -45,9 +54,6 @@ export default function App() {
 
 	const [markers, setMarkers] = useState([])
 	const [selected, setSelected] = useState(null)
-	const [isLoading, setIsLoading] = useState(false)
-	const [drivers, setDrivers] = useState([])
-	const [error, setError] = useState(null)
 
 	const onMapClick = useCallback(e => {
 		setMarkers(current => [
@@ -66,57 +72,6 @@ export default function App() {
 		mapRef.current.setZoom(15)
 	}, [])
 
-	// useEffect(() => {
-	// 	var xhr = new XMLHttpRequest()
-	// 	xhr.addEventListener('readtstatechange', () => {
-	// 		if (xhr.readyState === 4) {
-	// 			if (xhr.status === 200) {
-	// 				var response = xhr.responseText,
-	// 					driver = JSON.parse(response)
-	// 				setIsLoaded(true)
-	// 				setDriver(driver)
-	// 				console.log(driver)
-	// 			} else {
-	// 				setIsLoaded(true)
-	// 				setError(true)
-	// 			}
-	// 		}
-	// 	})
-	// 	xhr.open('GET', 'https://qa-interview-test.splytech.dev/api/drivers/', true)
-	// 	xhr.send()
-	// }, [])
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					'http://qa-interview-test.splytech.dev/api/drivers/',
-					{
-						mode: 'no-cors',
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/json'
-						}
-					}
-				)
-				const data = await response.json()
-				console.log(data)
-				// .then(response => response.json())
-				// .then(data => {
-				// 	setIsLoading(true)
-				// 	setDrivers(data)
-				// 	console.log(data)
-				// })
-			} catch (error) {
-				setIsLoading(true)
-				setError(error)
-				console.log(error.message)
-			}
-		}
-		fetchData()
-		console.log(fetchData())
-	}, [])
-
 	if (loadError) return 'Error loading maps'
 	if (!isLoaded) return 'Loading Maps'
 
@@ -124,6 +79,7 @@ export default function App() {
 		<div>
 			<Search panTo={panTo} />
 			<Locate panTo={panTo} />
+			<UISlider />
 			<GoogleMap
 				mapContainerStyle={mapContainerStyle}
 				zoom={12}
@@ -142,6 +98,16 @@ export default function App() {
 					/>
 				))}
 
+				{markers.map((marker, id) => (
+					<Marker
+						key={id}
+						position={{ lat: marker.lat, lng: marker.lng }}
+						onClick={e => {
+							setSelected(marker)
+						}}
+					/>
+				))}
+
 				{selected ? (
 					<InfoWindow
 						position={{ lat: selected.lat, lng: selected.lng }}
@@ -150,7 +116,7 @@ export default function App() {
 						}}
 					>
 						<div>
-							<h2>Number of Taxis:</h2>
+							<h2>Number of Taxis: </h2>
 							<p>{formatRelative(selected.time, new Date())}</p>
 						</div>
 					</InfoWindow>
@@ -228,6 +194,74 @@ export const Search = ({ panTo }) => {
 					</ComboboxList>
 				</ComboboxPopover>
 			</Combobox>
+		</div>
+	)
+}
+
+export const UISlider = () => {
+	const [isLoading, setIsLoading] = useState(false)
+	const [drivers, setDrivers] = useState([])
+	const [error, setError] = useState(null)
+	const [value, setValue] = useState(0)
+
+	useEffect(() => {
+		// const fetchData = async () => {
+		// 	try {
+		// const response = await
+		fetch('https://qa-interview-test.splytech.dev/api/drivers/', {
+			// mode: 'no-cors',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				Origin: 'http://localhost:3000',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'POST',
+				'Access-Control-Allow-Headers': 'Content-Type'
+			}
+		})
+			// const data = await response.json()
+			// console.log(data)
+			.then(response => response.json())
+			.then(
+				data => {
+					setIsLoading(true)
+					setDrivers(numberDrivers(data.drivers))
+					console.log(numberDrivers(data.drivers))
+				},
+				error => {
+					setIsLoading(true)
+					setError(error)
+					console.log(error.message)
+				}
+			)
+		// fetchData()
+		// console.log(fetchData())
+	}, [])
+
+	const numberDrivers = drivers => {
+		return drivers.map(cars => ({
+			bearing: cars.location.bearing,
+			driverID: cars.driver_id,
+			latitude: cars.location.latitude
+		}))
+	}
+
+	return (
+		<div>
+			{/* {drivers.drivers && drivers.drivers.map(item => console.log(item))} */}
+			{/* {drivers.map((item, index) => (
+				<InputRange
+					key={index}
+					maxValue={item.bearing}
+					onChange={value => setValue(value)}
+				/>
+			))} */}
+			<InputRange
+				maxValue={10}
+				minValue={0}
+				value={value}
+				onChange={value => setValue(value)}
+			/>
 		</div>
 	)
 }

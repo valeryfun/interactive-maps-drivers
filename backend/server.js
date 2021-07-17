@@ -15,8 +15,9 @@ app.get('/', (req, res) => {
 	res.send('API is running')
 })
 
-app.get('https://qa-interview-test.splytech.dev/api/drivers/', (req, res) => {
-	console.log(req.body)
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*')
+	next()
 })
 
 app.listen(5000, console.log('Server running on port 5000'))
