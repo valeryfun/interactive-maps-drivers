@@ -37,6 +37,17 @@ Markers:
 - A info window will pop up which should ideally show the number of taxis in the area
 <img width="1434" alt="Screenshot 2021-07-18 at 5 43 11 PM" src="https://user-images.githubusercontent.com/60170717/126062765-f0323db8-77bb-48f5-a2a6-d87808e7f491.png">
 
+UI Slider: 
+<img width="1440" alt="Screenshot 2021-07-18 at 6 19 00 PM" src="https://user-images.githubusercontent.com/60170717/126063636-61688d13-9ef6-460b-9cf9-24c08a4b4ee7.png">
+
+
+#### Data Fetched
+- An array of objects with
+  - Driver's ID
+  - Bearing
+  - Latitude and
+  - Longitude
+<img width="630" alt="Screenshot 2021-07-18 at 6 13 41 PM" src="https://user-images.githubusercontent.com/60170717/126063493-a733bdb4-ba56-48ff-9c10-57263062a513.png">
 
 
 
