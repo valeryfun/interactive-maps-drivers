@@ -1,12 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import './App.css'
-import React, {
-	useState,
-	useCallback,
-	useRef,
-	useEffect,
-	useSelector
-} from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import {
 	GoogleMap,
 	useLoadScript,
@@ -116,7 +110,7 @@ export default function App() {
 						}}
 					>
 						<div>
-							<h2>Number of Taxis: </h2>
+							<h2>Number of Taxis: 2</h2>
 							<p>{formatRelative(selected.time, new Date())}</p>
 						</div>
 					</InfoWindow>
@@ -205,11 +199,7 @@ export const UISlider = () => {
 	const [value, setValue] = useState(0)
 
 	useEffect(() => {
-		// const fetchData = async () => {
-		// 	try {
-		// const response = await
 		fetch('https://qa-interview-test.splytech.dev/api/drivers/', {
-			// mode: 'no-cors',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
@@ -219,8 +209,6 @@ export const UISlider = () => {
 				'Access-Control-Allow-Headers': 'Content-Type'
 			}
 		})
-			// const data = await response.json()
-			// console.log(data)
 			.then(response => response.json())
 			.then(
 				data => {
@@ -234,15 +222,14 @@ export const UISlider = () => {
 					console.log(error.message)
 				}
 			)
-		// fetchData()
-		// console.log(fetchData())
 	}, [])
 
 	const numberDrivers = drivers => {
 		return drivers.map(cars => ({
 			bearing: cars.location.bearing,
 			driverID: cars.driver_id,
-			latitude: cars.location.latitude
+			latitude: cars.location.latitude,
+			longitude: cars.location.longitude
 		}))
 	}
 
@@ -257,11 +244,12 @@ export const UISlider = () => {
 				/>
 			))} */}
 			<InputRange
+				formatLabel={drivers.bearing}
 				maxValue={10}
 				minValue={0}
 				value={value}
 				onChange={value => setValue(value)}
-			/>
+			></InputRange>
 		</div>
 	)
 }
