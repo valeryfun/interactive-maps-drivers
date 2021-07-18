@@ -73,10 +73,10 @@ export default function App() {
 		<div>
 			<Search panTo={panTo} />
 			<Locate panTo={panTo} />
-			<UISlider />
+
 			<GoogleMap
 				mapContainerStyle={mapContainerStyle}
-				zoom={12}
+				zoom={10}
 				center={center}
 				options={options}
 				onClick={onMapClick}
@@ -85,16 +85,6 @@ export default function App() {
 				{markers.map(marker => (
 					<Marker
 						key={marker.time.toISOString()}
-						position={{ lat: marker.lat, lng: marker.lng }}
-						onClick={e => {
-							setSelected(marker)
-						}}
-					/>
-				))}
-
-				{markers.map((marker, id) => (
-					<Marker
-						key={id}
 						position={{ lat: marker.lat, lng: marker.lng }}
 						onClick={e => {
 							setSelected(marker)
@@ -115,6 +105,7 @@ export default function App() {
 						</div>
 					</InfoWindow>
 				) : null}
+				<UISlider />
 			</GoogleMap>
 		</div>
 	)
@@ -197,6 +188,7 @@ export const UISlider = () => {
 	const [drivers, setDrivers] = useState([])
 	const [error, setError] = useState(null)
 	const [value, setValue] = useState(0)
+	const [mark, setMark] = useState([])
 
 	useEffect(() => {
 		fetch('https://qa-interview-test.splytech.dev/api/drivers/', {
@@ -235,14 +227,6 @@ export const UISlider = () => {
 
 	return (
 		<div>
-			{/* {drivers.drivers && drivers.drivers.map(item => console.log(item))} */}
-			{/* {drivers.map((item, index) => (
-				<InputRange
-					key={index}
-					maxValue={item.bearing}
-					onChange={value => setValue(value)}
-				/>
-			))} */}
 			<InputRange
 				formatLabel={drivers.bearing}
 				maxValue={10}
@@ -250,6 +234,15 @@ export const UISlider = () => {
 				value={value}
 				onChange={value => setValue(value)}
 			></InputRange>
+			{drivers.map((drivers, id) => (
+				<Marker
+					key={id}
+					title={drivers.driverID}
+					onClick={e => {
+						setMark(drivers)
+					}}
+				/>
+			))}
 		</div>
 	)
 }
